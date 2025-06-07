@@ -2,18 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "./Spinner";
 import PageNotFound from "./PageNotFound";
-import { useShoeStore } from "./stores/shoeStore";
+import { useCart } from "./context/cartContext";
 import { Product } from "./types/types";
 import toast from "react-hot-toast";
 
 export default function Detail() {
-  const addToCart = useShoeStore((state) => state.addToCart);
+  const { setCart } = useCart();
   const { id } = useParams();
   const [sku, setSku] = useState("");
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -60,7 +59,14 @@ export default function Detail() {
           className="btn btn-primary"
           onClick={() => {
             if (!sku) return alert("Select size.");
-            addToCart(parseInt(id), sku);
+            setCart((cart) => {
+              const itemInCart = cart.find((i) => i.sku === sku);
+              return itemInCart
+                ? cart.map((i) =>
+                    i.sku === sku ? { ...i, quantity: i.quantity + 1 } : i
+                  )
+                : [...cart, { id: parseInt(id), sku, quantity: 1 }];
+            });
             toast("Added to cart", { icon: "🛒" });
           }}
         >

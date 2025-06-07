@@ -1,9 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
-import { useShoeStore } from "./stores/shoeStore";
+import { useCart } from "./context/cartContext";
+import { useUser } from "./context/userContext";
 
 export default function Header() {
-  const { cart } = useShoeStore();
-  const { user, logIn, logOut } = useShoeStore();
+  const { cart } = useCart();
+  const { user, setUser } = useUser();
 
   return (
     <header>
@@ -31,7 +32,7 @@ export default function Header() {
               <NavLink to="/account">Account</NavLink>
             ) : (
               <button
-                onClick={() => logIn({ id: 1, email: "cory@example.com" })}
+                onClick={() => setUser({ id: 1, email: "cory@example.com" })}
               >
                 Log in
               </button>
@@ -39,7 +40,7 @@ export default function Header() {
           </li>
           {user && (
             <li>
-              <button onClick={() => logOut()}>Log out</button>
+              <button onClick={() => setUser(null)}>Log out</button>
             </li>
           )}
         </ul>

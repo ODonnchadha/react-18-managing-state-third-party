@@ -1,7 +1,7 @@
-import { useShoeStore } from "./stores/shoeStore";
+import { useUser } from "./context/userContext";
 
 export function Account() {
-  const user = useShoeStore((state) => state.user);
+  const { user } = useUser();
 
   return (
     <>
